@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card" style="max-width: 1000px; margin: 0 auto; min-height: 500px;">
+    <div style="display: flex; gap: 2.5rem; align-items: start;">
+        <!-- Left Column: Sensor Control & Terminal -->
+        <div style="flex: 1.5;">
+            <div style="margin-bottom: 2.5rem;">
+                <h1 style="font-size: 1.8rem; letter-spacing: -0.5px;">NIDS Sensor Control</h1>
+                <p style="color: var(--text-secondary); font-size: 0.95rem;">Interface for raw telemetry injection and LOF anomaly detection analysis.</p>
+            </div>
+
+            <!-- Modern Radar Upload Target (Semantic Label) -->
+            <form method="post" enctype="multipart/form-data" id="upload-form">
+                {% csrf_token %}
+                <label class="radar-container" for="csv_file" style="cursor: pointer; display: block;">
+                    <div class="radar-sweep"></div>
+                    <div style="position: relative; z-index: 5;">
+                        <div style="background: rgba(0, 255, 136, 0.1); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; border: 1px solid rgba(0, 255, 136, 0.3);">
+                            <i class="fa-solid fa-satellite-dish" style="font-size: 2.5rem; color: var(--accent-green);"></i>
+                        </div>
+                        <h2 id="upload-status" style="margin-bottom: 0.5rem; letter-spacing: 2px;">INJECT TELEMETRY</h2>
+                        <p id="filename-preview" style="color: var(--text-secondary); font-size: 0.85rem;">CLICK TO LOAD NETWORK LOGS (CSV)</p>
+                    </div>
+                </label>
+
+                <!-- Action Hub - Detached from Label to prevent double-click -->
+                <div id="action-hub" style="text-align: center; margin-top: 2rem; display: none;">
+                    <p id="file-sync-msg" style="color: var(--accent-green); margin-bottom: 1rem; font-family: monospace; font-size: 0.9rem;"></p>
+                    <button type="submit" class="btn" style="width: 250px; background: var(--accent-green); color: #000; font-weight: bold; box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);">
+                        <i class="fa-solid fa-bolt"></i> BEGIN NIDS ANALYSIS
+                    </button>
+                </div>
+
+                <input type="file" name="csv_file" id="csv_file" style="display: none;" onchange="handleFileSelect(this)">
+            </form>
+
+            <!-- Engine Diagnostic Terminal -->
+            <div class="engine-terminal" id="terminal-window">
+                <div class="terminal-line"><span class="terminal-timestamp">[01:30:12]</span> > SYS_INIT: NIDS ENGINE CORE V3.0.4</div>
+                <div class="terminal-line"><span class="terminal-timestamp">[01:30:13]</span> > STATUS: SENSOR_ARRAY_ACTIVE</div>
+                <div class="terminal-line"><span class="terminal-timestamp">[01:30:13]</span> > READY: WAITING FOR TELEMETRY INJECTION...</div>
+            </div>
+        </div>
+
+        <!-- Right Column: Sensor Health & Specs -->
+        <div style="flex: 1;">
+            <!-- Technical Specs Box -->
+            <section class="card" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); margin: 0;">
+                <h3 style="font-size: 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-microchip" style="color: var(--accent-green);"></i> Sensor Parameters
+                </h3>
+                
+                <div style="display: grid; gap: 1rem;">
+                    <div class="spec-item">
+                        <span class="spec-label">Input Engine</span>
+                        Pandas CSV Parser
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Model Architecture</span>
+                        Local Outlier Factor (LOF)
+                    </div>
+                    <div class="spec-item" style="border-left-color: var(--accent-red);">
+                        <span class="spec-label">Required Schema</span>
+                        duration, src_ip, dst_ip, protocol, packet_size
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; padding: 1.2rem; background: rgba(0, 255, 136, 0.05); border-radius: 12px; border: 1px solid rgba(0, 255, 136, 0.1);">
+                    <div style="display: flex; gap: 10px; color: var(--accent-green); font-weight: bold; font-size: 0.75rem; margin-bottom: 8px; text-transform: uppercase;">
+                        <i class="fa-solid fa-circle-info"></i> Sensor Health
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
+                        The sensor is currently <strong>IDLE</strong>. Inject telemetry to begin real-time packet classification and anomaly scoring.
+                    </p>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script>
+    function handleFileSelect(input) {
+        const status = document.getElementById('upload-status');
+        const preview = document.getElementById('filename-preview');
+        const actionHub = document.getElementById('action-hub');
+        const syncMsg = document.getElementById('file-sync-msg');
+        const terminal = document.getElementById('terminal-window');
+
+        if (input.files && input.files[0]) {
+            status.innerText = "TELEMETRY LOADED";
+            status.style.color = "var(--accent-green)";
+            preview.innerText = "READY FOR INJECTION";
+            
+            // Show action hub
+            actionHub.style.display = "block";
+            syncMsg.innerText = "DATA_SYNC_COMPLETE: " + input.files[0].name.toUpperCase();
+
+            // Add terminal feedback
+            const line = document.createElement('div');
+            line.className = 'terminal-line';
+            line.innerHTML = `<span class="terminal-timestamp">[${new Date().toLocaleTimeString()}]</span> > TELEMETRY_STAGED: ${input.files[0].name}`;
+            terminal.appendChild(line);
+            
+            const line2 = document.createElement('div');
+            line2.className = 'terminal-line';
+            line2.innerHTML = `<span class="terminal-timestamp">[${new Date().toLocaleTimeString()}]</span> > AWAITING_OPERATOR_COMMAND...`;
+            terminal.appendChild(line2);
+            
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+    }
+</script>
+{% endblock %}

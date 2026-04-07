@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- KPI Grid -->
+<section class="kpi-grid">
+    <div class="card">
+        <span class="card-title">Packets Analyzed</span>
+        <span id="stat-packets" class="card-value">{{ packets_analyzed }}</span>
+    </div>
+    <div class="card">
+        <span class="card-title">Active Connections</span>
+        <span id="stat-active" class="card-value">{{ active_connections }}</span>
+    </div>
+    <div class="card">
+        <span class="card-title">Anomalies Detected</span>
+        <span id="stat-anomalies" class="card-value" style="color: var(--accent-red);">{{ anomalies_detected }}</span>
+    </div>
+    <div class="card">
+        <span class="card-title">Current Threat level</span>
+        <span class="card-value">{{ threat_level }}</span>
+    </div>
+</section>
+
+<!-- Dashboard Section: Graphs -->
+<div class="dashboard-sections">
+    <section class="card chart-card">
+        <h3>Network Traffic Velocity</h3>
+        <p style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 1rem;">Real-time incoming packets classification</p>
+        
+        <div class="chart-legend">
+            <div class="legend-toggle enabled toggle-normal" id="toggle-normal">
+                <span class="status-box"></span>
+                <span style="font-size: 0.85rem;">Normal Traffic</span>
+            </div>
+            <div class="legend-toggle enabled toggle-anomaly" id="toggle-anomaly">
+                <span class="status-box"></span>
+                <span style="font-size: 0.85rem;">Anomalous Traffic</span>
+            </div>
+        </div>
+
+        <div style="height: 300px;">
+            <canvas id="lineChart"></canvas>
+        </div>
+    </section>
+
+    <section class="card chart-card">
+        <h3>Traffic Classification</h3>
+        <p style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 1rem;">Protocol risk distribution</p>
+        <div style="height: 300px;">
+            <canvas id="donutChart"></canvas>
+        </div>
+    </section>
+</div>
+
+<div class="dashboard-sections">
+    <!-- Activity Table -->
+    <section class="card activity-table-section">
+        <h3>Suspicious Network Activity</h3>
+        <p style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 1rem;">Most recent suspicious logs detected by NIDS</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Source IP</th>
+                    <th>Destination IP</th>
+                    <th>Protocol</th>
+                    <th>Size (B)</th>
+                    <th>Score</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody id="recent-logs-body">
+                {% for log in recent_logs %}
+                <tr>
+                    <td class="ip-address ip-src">{{ log.src_ip }}</td>
+                    <td class="ip-address ip-dst">{{ log.dst_ip }}</td>
+                    <td>{{ log.protocol }}</td>
+                    <td>{{ log.packet_size }}</td>
+                    <td><code class="score-{% if log.prediction == -1 %}anomaly{% else %}normal{% endif %}">{{ log.anomaly_score|floatformat:2 }}</code></td>
+                    <td><span class="status-pill status-{{ log.status|lower }}">{% if log.status == 'Critical' %}<i class="fa-solid fa-triangle-exclamation"></i> {% endif %}{{ log.status }}</span></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; color: var(--text-secondary);">No traffic records found. Upload data to get started.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </section>
+
+    <!-- Alerts Panel -->
+    <section class="card">
+        <h3>Recent Security Alerts</h3>
+        <p style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 1rem;">Immediate threats needing focus</p>
+        <div class="alerts-panel" id="alerts-container">
+            {% for alert in recent_alerts %}
+            <div class="alert-item alert-{{ alert.severity|lower }}">
+                <div class="alert-title">{{ alert.type }}</div>
+                <div class="alert-desc">{{ alert.message }}</div>
+                <div style="font-size: 0.65rem; margin-top: 5px; color: var(--accent-red);">{{ alert.timestamp|timesince }} ago</div>
+            </div>
+            {% empty %}
+            <p style="text-align: center; color: var(--text-secondary);">System clear. No active alerts.</p>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+{% endblock %}

@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IntrusionX | Master SOC Monitoring</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+        <a href="{% url 'login' %}" style="text-decoration: none; color: inherit; display: block;">
+            <div class="logo">
+                <i class="fa-solid fa-shield-virus"></i>
+                <div>
+                    <span style="font-size: 1.5rem; letter-spacing: 2px;">IntrusionX</span>
+                </div>
+            </div>
+        </a>
+        
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="{% url 'dashboard' %}" class="nav-link active">
+                    <i class="fa-solid fa-gauge"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'upload_csv' %}" class="nav-link">
+                    <i class="fa-solid fa-upload"></i> Traffic Monitor
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'alerts' %}" class="nav-link">
+                    <i class="fa-solid fa-bell"></i> Alerts {% if alert_count > 0 %}<span class="badge">{{ alert_count }}</span>{% endif %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'logs' %}" class="nav-link">
+                    <i class="fa-solid fa-list-check"></i> Logs
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'settings' %}" class="nav-link">
+                    <i class="fa-solid fa-gear"></i> Settings
+                </a>
+            </li>
+        </ul>
+
+        <div class="sensor-status">
+            <div class="status-dot"></div>
+            <span>Sensor Status: Online</span>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            {% if user.is_authenticated %}
+            <form action="{% url 'logout' %}" method="post" id="logout-form" style="display: none;">{% csrf_token %}</form>
+            <a href="javascript:document.getElementById('logout-form').submit();" class="nav-link">
+                <i class="fa-solid fa-sign-out"></i> Logout
+            </a>
+            {% endif %}
+        </div>
+    </aside>
+
+    <!-- Main Layout -->
+    <main class="main-layout">
+        
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1>System Overview <span id="threat-level-badge" class="threat-badge threat-{{ threat_level|lower }}">{{ threat_level }}</span></h1>
+            </div>
+            <a href="{% url 'settings' %}" class="header-right" style="display: flex; align-items: center; gap: 15px; text-decoration: none; transition: 0.3s; opacity: 1;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                <div class="user-profile" style="text-align: right;">
+                    <span style="display: block; font-weight: bold; color: var(--text-primary);">{{ user.username|default:"Admin" }}</span>
+                    <span style="font-size: 0.75rem; color: var(--text-secondary);">SecOps Lead</span>
+                </div>
+                <img src="https://avatars.githubusercontent.com/u/174958752?v=4" width="40" height="40" style="border-radius: 50%; border: 2px solid var(--accent-green);">
+            </a>
+        </header>
+
+        {% block content %}{% endblock %}
+
+    </main>
+
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

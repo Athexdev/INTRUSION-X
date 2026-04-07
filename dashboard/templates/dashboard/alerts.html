@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <div>
+            <h2>Security Alerts History</h2>
+            <p style="color: var(--text-secondary);">Comprehensive list of all network intrusions and anomalies detected.</p>
+        </div>
+        <form action="{% url 'clear_data' %}" method="POST" onsubmit="return confirm('Clear ALL alert history and reset logs?')">
+            {% csrf_token %}
+            <button type="submit" class="btn" style="background: var(--accent-green); color: #000; font-weight: bold;">Clear All Records</button>
+        </form>
+    </div>
+
+    <div class="alerts-list">
+        {% for alert in recent_alerts %}
+        <div class="alert-item alert-{{ alert.severity|lower }}" style="margin-bottom: 1rem; padding: 1.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); border-radius: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div>
+                    <h3 style="color: var(--text-primary);">{{ alert.type }}</h3>
+                    <p style="margin: 0.5rem 0; font-size: 0.9rem;">{{ alert.message }}</p>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary);"><i class="fa-solid fa-clock"></i> {{ alert.timestamp|date:"M d, Y H:i:s" }}</div>
+                </div>
+                <div class="status-pill status-{{ alert.severity|lower }}" style="background: rgba(255, 62, 62, 0.2); color: var(--accent-red); border-color: rgba(255, 62, 62, 0.3);">
+                    {{ alert.severity }}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div style="text-align: center; padding: 5rem 3rem; color: var(--text-secondary); background: rgba(0, 255, 136, 0.02); border-radius: 20px; border: 1px dashed var(--glass-border);">
+            <i class="fa-solid fa-shield-check" style="font-size: 3.5rem; color: var(--accent-green); margin-bottom: 1.5rem; display: block; opacity: 0.4;"></i>
+            <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">SYSTEM SECURE</h3>
+            No security threats found in the historical logs.
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

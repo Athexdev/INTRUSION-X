@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <div>
+            <h2>Historical Traffic Logs</h2>
+            <p style="color: var(--text-secondary);">Access all network telemetry processed by the NIDS system.</p>
+        </div>
+        <div>
+            <input type="text" placeholder="Search by IP..." style="padding: 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); color: white; border-radius: 8px; margin-right: 1rem;">
+            <a href="{% url 'master_export_csv' %}" class="btn" style="background: rgba(0, 255, 136, 0.1); color: var(--accent-green); border: 1px solid rgba(0, 255, 136, 0.3); box-shadow: 0 0 15px rgba(0, 255, 136, 0.1); text-decoration: none;">
+                <i class="fa-solid fa-file-export" style="margin-right: 8px;"></i> Export Manifest
+            </a>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Source IP</th>
+                <th>Destination IP</th>
+                <th>Protocol</th>
+                <th>Packet Size</th>
+                <th>Duration</th>
+                <th>Anomaly Score</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td style="color: var(--text-secondary); font-size: 0.8rem;">{{ log.timestamp|date:"M d, H:i:s" }}</td>
+                <td class="ip-address ip-src">{{ log.src_ip }}</td>
+                <td class="ip-address ip-dst">{{ log.dst_ip }}</td>
+                <td><span style="background: rgba(255, 255, 255, 0.1); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">{{ log.protocol }}</span></td>
+                <td>{{ log.packet_size }} B</td>
+                <td>{{ log.duration|floatformat:4 }}s</td>
+                <td><code class="score-{% if log.prediction == -1 %}anomaly{% else %}normal{% endif %}">{{ log.anomaly_score|floatformat:4 }}</code></td>
+                <td><span class="status-pill status-{{ log.status|lower }}">{% if log.status == 'Critical' %}<i class="fa-solid fa-triangle-exclamation"></i> {% endif %}{{ log.status }}</span></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" style="text-align: center; padding: 3rem; color: var(--text-secondary);">No traffic logs found. Import data to populate logs.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

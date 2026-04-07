@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <h2>SOC Command & Control</h2>
+    <p style="color: var(--text-secondary);">Manage NIDS engine sensitivity and network interdiction parameters.</p>
+</div>
+
+<!-- Admin Control Grid -->
+<!-- Admin Control Grid -->
+<div class="dashboard-sections">
+    <!-- OPERATOR AUTHENTICATION PATCHING -->
+    <section class="card">
+        <h3><i class="fa-solid fa-user-shield"></i> Operator Authentication</h3>
+        <p style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 2rem;">Update SecOps Lead credentials and master authentication tokens.</p>
+        
+        <form action="{% url 'update_profile' %}" method="post">
+            {% csrf_token %}
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-size: 0.7rem; text-transform: uppercase; margin-bottom: 8px; color: var(--accent-green);">Identity Identifier (Username)</label>
+                <input type="text" name="username" value="{{ user.username }}" class="form-control" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: white; border-radius: 6px;">
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 1.5rem;">
+                <div>
+                    <label style="display: block; font-size: 0.7rem; text-transform: uppercase; margin-bottom: 8px; color: var(--accent-green);">New Auth Token (Password)</label>
+                    <input type="password" name="password" placeholder="••••••••" class="form-control" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: white; border-radius: 6px;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.7rem; text-transform: uppercase; margin-bottom: 8px; color: var(--accent-green);">Confirm Token</label>
+                    <input type="password" name="confirm_password" placeholder="••••••••" class="form-control" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: white; border-radius: 6px;">
+                </div>
+            </div>
+            <button type="submit" class="btn" style="width: 100%;">PATCH AUTHENTICATION CORE</button>
+        </form>
+    </section>
+
+    <!-- NIDS ENGINE SENSITIVITY -->
+    <section class="card">
+        <h3><i class="fa-solid fa-microchip"></i> NIDS AI Sensitivity</h3>
+        <p style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 2rem;">Adjust the contamination factor for anomaly detection (Lower = More Strict)</p>
+        
+        <form action="{% url 'update_settings' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="key" value="nids_contamination">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <input type="range" name="value" min="0.01" max="0.5" step="0.01" value="{{ nids_contamination|default:'0.1' }}" 
+                       style="flex: 1; accent-color: var(--accent-green);" id="sensRange"
+                       oninput="this.nextElementSibling.value = this.value">
+                <output style="font-family: monospace; font-size: 1.2rem; color: var(--accent-green); width: 50px;">{{ nids_contamination|default:'0.1' }}</output>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 2rem; width: 100%;">APPLY SENSITIVITY PATCH</button>
+        </form>
+    </section>
+
+    <!-- IP BLACKLIST COMMAND -->
+    <section class="card">
+        <h3><i class="fa-solid fa-ban"></i> Threat Blacklist</h3>
+        <p style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 1rem;">Permanently block traffic from specific IPs</p>
+        
+        <div style="max-height: 200px; overflow-y: auto; margin-bottom: 1.5rem; border: 1px solid rgba(255,255,255,0.05); border-radius: 5px; background: rgba(0,0,0,0.2);">
+            <table style="font-size: 0.8rem;">
+                <thead>
+                    <tr><th>IP Address</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    {% for bip in blacklisted_ips %}
+                    <tr>
+                        <td class="ip-address">{{ bip.ip_address }}</td>
+                        <td>
+                            <form action="{% url 'remove_blacklist' %}" method="post" style="margin:0;">
+                                {% csrf_token %}
+                                <input type="hidden" name="ip" value="{{ bip.ip_address }}">
+                                <button type="submit" style="background: none; border: none; color: var(--accent-red); cursor: pointer;"><i class="fa-solid fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="2" style="text-align: center; color: var(--text-secondary); padding: 10px;">No active blocks.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <form action="{% url 'add_blacklist' %}" method="post" style="display: flex; gap: 10px;">
+            {% csrf_token %}
+            <input type="text" name="ip" placeholder="192.168.X.X" class="form-control" style="flex: 1; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); color: white; border-radius: 5px;">
+            <button type="submit" class="btn" style="padding: 10px 20px;">BLOCK</button>
+        </form>
+    </section>
+</div>
+
+<div class="dashboard-sections">
+    <!-- ACTIVE NODES & INTERDICTION -->
+    <section class="card" style="flex: 2;">
+        <h3><i class="fa-solid fa-network-wired"></i> Managed Nodes & Interdiction</h3>
+        <p style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 1rem;">Live telemetry sources available for block-command</p>
+        <table style="margin-top: 1rem;">
+            <thead>
+                <tr>
+                    <th>Source IP</th>
+                    <th>Type</th>
+                    <th>Recent Hit Count</th>
+                    <th>Command</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for node in active_nodes %}
+                <tr>
+                    <td class="ip-address">{{ node.src_ip }}</td>
+                    <td><span class="status-pill status-safe">Sensor Node</span></td>
+                    <td style="font-family: monospace;">{{ node.hit_count }}</td>
+                    <td>
+                        <form action="{% url 'add_blacklist' %}" method="post" style="margin: 0;">
+                            {% csrf_token %}
+                            <input type="hidden" name="ip" value="{{ node.src_ip }}">
+                            <button type="submit" class="btn btn-sm" style="background: var(--accent-red); padding: 5px 12px; font-size: 0.7rem; border-radius: 4px;">BLOCK IP</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" style="text-align: center; padding: 20px; color: var(--text-secondary);">No active sensor data in current session.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <!-- SYSTEM DATA PURGE -->
+    <section class="card">
+        <h3><i class="fa-solid fa-trash-can"></i> System Purge</h3>
+        <p style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 2rem;">Destroy all network logs and security alerts from the local database.</p>
+        <form action="{% url 'clear_data' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn" style="background: var(--accent-red); color: white; width: 100%; box-shadow: 0 0 15px rgba(255, 62, 62, 0.2);" onclick="return confirm('CRITICAL ALERT: Purge all NIDS records?')">
+                WIPE ARCHIVE
+            </button>
+        </form>
+        
+        <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px dashed rgba(255,255,255,0.1);">
+            <div style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">Secure Engine Status</div>
+            <div style="color: var(--accent-green); font-weight: bold; margin-top: 5px;">ACTIVE: ATHEX_CORE_v4.2.0</div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}
