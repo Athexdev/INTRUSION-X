@@ -1,21 +1,53 @@
 # 🚀 INTRUSION X — Network Intrusion Detection System (SOC Dashboard)
 
-Welcome to the **INTRUSION X** Master Security Operations Center (SOC) dashboard. This project is a dark, cyber-themed, fully responsive NIDS backend interface built with Django. It features a seamless login integration via a dynamic 3D-globe landing page, live threat monitoring dashboards, interactive network traffic charts, alert visualizations, and more.
+> **“Where Threats Meet Their End.”**
 
-## Architecture & Stack
-- **Backend framework**: Django (Python)
-- **Database**: SQLite3 (default)
-- **Frontend Assets**: Three.js, GSAP (animations), Chart.js (graphs), TailwindCSS (utility layouts), Custom Vanilla CSS (Cyber Theme & Glassmorphism)
+INTRUSION X is a **cybersecurity-focused Network Intrusion Detection System (NIDS)** with a visually immersive **Security Operations Center (SOC) dashboard**. It combines real-time monitoring, anomaly detection, and modern UI/UX to simulate a production-grade cyber defense system.
 
-## Workspace Architecture
+---
+
+## 📸 Preview
+
+### 🔥 Landing Page
+
+![Landing Page](./static/images/landing-preview.png)
+
+---
+
+## 🧠 Features
+
+* 🌍 **3D Interactive Landing Page** (Three.js + GSAP)
+* 📊 **Real-time SOC Dashboard**
+* 🚨 **Threat Detection & Alerts System**
+* 📡 **Live Network Traffic Monitoring**
+* 📈 **Interactive Charts (Chart.js)**
+* 🔐 **Secure Authentication System**
+* 🎨 **Dark Cyber UI (Glassmorphism + Neon Theme)**
+* ⚡ **Modular & Scalable Django Backend**
+
+---
+
+## 🏗️ Tech Stack
+
+* **Backend:** Django (Python)
+* **Database:** SQLite3
+* **Frontend:** HTML, TailwindCSS, Custom CSS
+* **Animations:** Three.js, GSAP
+* **Charts:** Chart.js
+* **Scripting:** Vanilla JavaScript
+
+---
+
+## 📁 Project Structure
+
 ```text
 NIDS_BACKEND/
 │
 ├── dashboard/        # SOC dashboard logic and views
 ├── users/            # Authentication and user management
 ├── detection/        # Network logs & anomaly detection
-├── static/           # CSS, JS, animations
-├── templates/        # HTML templates
+├── static/           # CSS, JS, animations (Landing Assets)
+├── templates/        # HTML templates (Landing Page)
 └── nids_project/     # Django settings & routing
 ```
 
@@ -24,46 +56,39 @@ NIDS_BACKEND/
 ## ⚙️ Setup Instructions
 
 ### 1️⃣ Clone Repository
-
-```
-git clone https://github.com/your-username/intrusionx.git
-cd intrusionx
+```bash
+git clone https://github.com/Athexdev/INTRUSION-X.git
+cd INTRUSION-X
 ```
 
 ### 2️⃣ Install Dependencies
-
-```
+```bash
 pip install django
 ```
-
 *(or)*
-
-```
+```bash
 pip install -r requirements.txt
 ```
 
 ---
 
 ### 3️⃣ Run Migrations
-
-```
+```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
 ---
 
-### 4️⃣ Create Admin User
-
-```
+### 4️⃣ Create Admin User (SOC Operator)
+```bash
 python manage.py createsuperuser
 ```
 
 ---
 
 ### 5️⃣ Start Server
-
-```
+```bash
 python manage.py runserver
 ```
 
@@ -72,16 +97,14 @@ python manage.py runserver
 ---
 
 ## 🔐 Access Flow
-
-```
+```text
 Landing Page → Login → SOC Dashboard → Detection Engine → Alerts & Analytics
 ```
 
 ---
 
 ## 🛠️ Utility Scripts
-
-```
+```bash
 # System diagnostics
 python ATHEX_SOC.py
 
@@ -95,13 +118,11 @@ python debesh_help.py
 ---
 
 ## 🚀 Production Setup
-
-```
+```bash
 python manage.py collectstatic
 ```
 
 ### Recommended Improvements:
-
 * PostgreSQL / MySQL for production DB
 * Redis + Celery for background tasks
 * Docker containerization
@@ -110,7 +131,6 @@ python manage.py collectstatic
 ---
 
 ## 🌟 Future Enhancements
-
 * 🔍 Machine Learning-based anomaly detection (LOF, Isolation Forest)
 * 🌐 GeoIP attack visualization
 * 📡 Real-time packet capture integration
@@ -120,25 +140,21 @@ python manage.py collectstatic
 ---
 
 ## 🤝 Contributing
-
 Pull requests are welcome. For major changes, please open an issue first.
 
 ---
 
 ## 📜 License
-
 This project is licensed under the MIT License.
 
 ---
 
 ## 💻 Source Code
-
-👉 https://github.com/your-repo-link
+👉 [Explore the repository](https://github.com/Athexdev/INTRUSION-X.git)
 
 ---
 
 ## 👨‍💻 Author
-
 **Debesh Nayak**
 Cybersecurity Enthusiast | Developer | SOC Explorer
 
