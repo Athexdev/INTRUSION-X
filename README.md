@@ -12,8 +12,6 @@ INTRUSION X is a **cybersecurity-focused Network Intrusion Detection System (NID
 
 ![Landing Page](./static/images/landing-preview.png)
 
-> ⚠️ Replace the path above with your actual screenshot path (e.g., `assets/landing.png` or GitHub image URL)
-
 ---
 
 ## 🧠 Features
