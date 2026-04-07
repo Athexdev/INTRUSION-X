@@ -1,75 +1,181 @@
-# INTRUSION X - Network Intrusion Detection System (SOC Dashboard)
+# 🚀 INTRUSION X — Network Intrusion Detection System (SOC Dashboard)
 
-Welcome to the **INTRUSION X** Master Security Operations Center (SOC) dashboard. This project is a dark, cyber-themed, fully responsive NIDS backend interface built with Django. It features a seamless login integration via a dynamic 3D-globe landing page, live threat monitoring dashboards, interactive network traffic charts, alert visualizations, and more.
+> **“Where Threats Meet Their End.”**
 
-## Architecture & Stack
-- **Backend framework**: Django (Python)
-- **Database**: SQLite3 (default)
-- **Frontend Assets**: Three.js, GSAP (animations), Chart.js (graphs), TailwindCSS (utility layouts), Custom Vanilla CSS (Cyber Theme & Glassmorphism)
+INTRUSION X is a **cybersecurity-focused Network Intrusion Detection System (NIDS)** with a visually immersive **Security Operations Center (SOC) dashboard**. It combines real-time monitoring, anomaly detection, and modern UI/UX to simulate a production-grade cyber defense system.
 
-## Workspace Architecture
-```text
+---
+
+## 📸 Preview
+
+### 🔥 Landing Page
+
+![Landing Page](./static/images/landing-preview.png)
+
+> ⚠️ Replace the path above with your actual screenshot path (e.g., `assets/landing.png` or GitHub image URL)
+
+---
+
+## 🧠 Features
+
+* 🌍 **3D Interactive Landing Page** (Three.js + GSAP)
+* 📊 **Real-time SOC Dashboard**
+* 🚨 **Threat Detection & Alerts System**
+* 📡 **Live Network Traffic Monitoring**
+* 📈 **Interactive Charts (Chart.js)**
+* 🔐 **Secure Authentication System**
+* 🎨 **Dark Cyber UI (Glassmorphism + Neon Theme)**
+* ⚡ **Modular & Scalable Django Backend**
+
+---
+
+## 🏗️ Tech Stack
+
+* **Backend:** Django (Python)
+* **Database:** SQLite3
+* **Frontend:** HTML, TailwindCSS, Custom CSS
+* **Animations:** Three.js, GSAP
+* **Charts:** Chart.js
+* **Scripting:** Vanilla JavaScript
+
+---
+
+## 📁 Project Structure
+
+```
 NIDS_BACKEND/
 │
-├── dashboard/        # Core SOC interface, metrics logic, and system settings
-├── users/            # Handles root authentication, security, and credentials
-├── detection/        # Processing logic models (Network logs, Alerts)
-├── static/           # Global CSS and JavaScripts logic (landing.js, style.css)
-├── templates/        # Global unified templates (landing.html, base.html)
-└── nids_project/     # Django root settings and URL routing configs
+├── dashboard/        # SOC dashboard logic and views
+├── users/            # Authentication and user management
+├── detection/        # Network logs & anomaly detection
+├── static/           # CSS, JS, animations
+├── templates/        # HTML templates
+└── nids_project/     # Django settings & routing
 ```
 
-## Quick Start Guide
+---
 
-### 1. Requirements
-Ensure you have Python 3.8+ installed. Install the necessary packages.
-```bash
+## ⚙️ Setup Instructions
+
+### 1️⃣ Clone Repository
+
+```
+git clone https://github.com/your-username/intrusionx.git
+cd intrusionx
+```
+
+### 2️⃣ Install Dependencies
+
+```
 pip install django
 ```
-*(If you have a `requirements.txt` file, use `pip install -r requirements.txt`)*
 
-### 2. Database Migrations
-Before booting up the server for the first time (or after any model updates), you must securely apply database migrations:
-```bash
+*(or)*
+
+```
+pip install -r requirements.txt
+```
+
+---
+
+### 3️⃣ Run Migrations
+
+```
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-### 3. Creating an Admin Account (SOC Operator)
-To access the dashboard, you will need a root clearance credential. 
-```bash
+---
+
+### 4️⃣ Create Admin User
+
+```
 python manage.py createsuperuser
 ```
-Follow the interactive prompts to assign a Username (Identifier) and Password (Clearance Key).
 
-### 4. Booting the Application
-Execute the following to start the master control server:
-```bash
+---
+
+### 5️⃣ Start Server
+
+```
 python manage.py runserver
 ```
-Once the server initiates, go to **`http://127.0.0.1:8000/`** safely in your browser. 
-You will be greeted by the `INTRUSION X` live landing page. Use your configured Admin credentials to securely initialize your session into the SOC dashboard.
 
-## Additional Master Commands
+🌐 Open: `http://127.0.0.1:8000/`
 
-**Collect Static Assets**
-When moving to a production environment, gather all theme files across modules safely:
-```bash
-python manage.py collectstatic
+---
+
+## 🔐 Access Flow
+
+```
+Landing Page → Login → SOC Dashboard → Detection Engine → Alerts & Analytics
 ```
 
-**Execute Custom Helper Scripts**
-The root directory includes automated Python files that can be run out-of-band depending on your operational needs:
-```bash
-# To check basic operational logic statuses
+---
+
+## 🛠️ Utility Scripts
+
+```
+# System diagnostics
 python ATHEX_SOC.py
 
-# Auto-execute migrations securely via local script
+# Auto migrations
 python run_migrations.py
 
-# Reset or configure the project directory structures
+# Project setup/reset helper
 python debesh_help.py
 ```
 
-## Aesthetic Notes
-The platform features a native "Terminal Glow" glassmorphism utilizing specifically tailored CSS tokens. Modifying core colors globally should ideally only require overriding the CSS Custom Properties in `:root` inside `static/css/style.css` and `static/css/landing.css`. The font family stack is anchored by the *JetBrains Mono* font.
+---
+
+## 🚀 Production Setup
+
+```
+python manage.py collectstatic
+```
+
+### Recommended Improvements:
+
+* PostgreSQL / MySQL for production DB
+* Redis + Celery for background tasks
+* Docker containerization
+* Nginx + Gunicorn deployment
+
+---
+
+## 🌟 Future Enhancements
+
+* 🔍 Machine Learning-based anomaly detection (LOF, Isolation Forest)
+* 🌐 GeoIP attack visualization
+* 📡 Real-time packet capture integration
+* 🔔 Email/SMS alert system
+* 👥 Role-based access control (RBAC)
+
+---
+
+## 🤝 Contributing
+
+Pull requests are welcome. For major changes, please open an issue first.
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 💻 Source Code
+
+👉 https://github.com/your-repo-link
+
+---
+
+## 👨‍💻 Author
+
+**Debesh Nayak**
+Cybersecurity Enthusiast | Developer | SOC Explorer
+
+---
+
+🔥 *INTRUSION X — Defending Networks, Detecting Threats, Delivering Intelligence.*
